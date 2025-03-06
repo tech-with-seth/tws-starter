@@ -4,12 +4,13 @@
     "type": "module",
     "scripts": {
         "build": "react-router build",
-        "dev": "react-router dev",
-        "start": "react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc",
+        "db:migrate": "npx prisma migrate dev",
         "db:seed": "npx tsx ./prisma/seed.ts",
         "db:view": "npx prisma studio",
-        "postinstall": "prisma generate"
+        "dev": "react-router dev",
+        "postinstall": "prisma generate",
+        "start": "react-router-serve ./build/server/index.js",
+        "typecheck": "react-router typegen && tsc"
     },
     "dependencies": {
         "@prisma/client": "^6.4.1",
