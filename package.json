@@ -8,7 +8,6 @@
         "db:seed": "npx tsx ./prisma/seed.ts",
         "db:view": "npx prisma studio",
         "dev": "react-router dev",
-        "postinstall": "prisma generate",
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
     },
