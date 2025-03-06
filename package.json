@@ -5,6 +5,7 @@
     "scripts": {
         "build": "react-router build",
         "db:migrate": "npx prisma migrate dev",
+        "db:migrate:deploy": "npx prisma migrate deploy",
         "db:seed": "npx tsx ./prisma/seed.ts",
         "db:view": "npx prisma studio",
         "dev": "react-router dev",
