@@ -18,20 +18,20 @@ export async function loader() {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   return (
-    <>
-      <div className="p-4">
+    <div className="space-y-4">
+      <div className="py-4">
         <h1 className="text-4xl font-bold">Welcome to TWS Starter</h1>
       </div>
       <div className="flex gap-4">
-        <div className="p-4">
-          <h1 className="text-4xl font-bold">Side bar</h1>
+        <div>
+          <h4 className="text-xl font-bold">Side bar</h4>
         </div>
-        <div className="p-4">
+        <div>
           <pre>
             <code>{JSON.stringify(loaderData, null, 4)}</code>
           </pre>
         </div>
       </div>
-    </>
+    </div>
   );
 }
