@@ -4,11 +4,12 @@
     "type": "module",
     "scripts": {
         "build": "react-router build",
-        "db:migrate": "npx prisma migrate dev",
         "db:deploy": "npx prisma migrate deploy && npx prisma generate",
+        "db:migrate": "npx prisma migrate dev",
         "db:seed": "npx tsx ./prisma/seed.ts",
         "db:view": "npx prisma studio",
         "dev": "react-router dev",
+        "format": "prettier --write .",
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
     },
@@ -27,6 +28,8 @@
         "@types/node": "^20.17.23",
         "@types/react": "^19.0.1",
         "@types/react-dom": "^19.0.1",
+        "prettier": "^3.5.3",
+        "prettier-plugin-tailwindcss": "^0.6.11",
         "prisma": "^6.4.1",
         "react-router-devtools": "^1.1.0",
         "tailwindcss": "^4.0.0",
