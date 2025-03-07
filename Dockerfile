@@ -20,11 +20,3 @@ COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 WORKDIR /app
 CMD ["npm", "run", "start"]
-
-# Prisma
-# FROM node:20-alpine
-# WORKDIR /app
-# COPY package.json package-lock.json ./
-# RUN npm ci
-# COPY . .
-# CMD ["sh", "-c", "npm run db:deploy && npm run dev"]
