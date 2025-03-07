@@ -5,11 +5,10 @@
     "scripts": {
         "build": "react-router build",
         "db:migrate": "npx prisma migrate dev",
-        "db:migrate:deploy": "npx prisma migrate deploy && npx prisma generate",
+        "db:deploy": "npx prisma migrate deploy && npx prisma generate",
         "db:seed": "npx tsx ./prisma/seed.ts",
         "db:view": "npx prisma studio",
         "dev": "react-router dev",
-        "postinstall": "prisma generate",
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
     },
