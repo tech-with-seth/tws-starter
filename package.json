@@ -5,7 +5,7 @@
     "scripts": {
         "build": "react-router build",
         "db:migrate": "npx prisma migrate dev",
-        "db:migrate:deploy": "npx prisma migrate deploy",
+        "db:migrate:deploy": "npx prisma migrate deploy && npx prisma generate",
         "db:seed": "npx tsx ./prisma/seed.ts",
         "db:view": "npx prisma studio",
         "dev": "react-router dev",
@@ -35,5 +35,8 @@
         "typescript": "^5.7.2",
         "vite": "^5.4.11",
         "vite-tsconfig-paths": "^5.1.4"
+    },
+    "prisma": {
+        "seed": "tsx prisma/seed.ts"
     }
 }
