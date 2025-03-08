@@ -1,4 +1,3 @@
-import { prisma } from "~/db.server";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -8,15 +7,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader() {
-  const users = await prisma.user.findMany();
-
-  return {
-    users,
-  };
-}
-
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function Home() {
   return (
     <>
       <h1 className="text-4xl font-bold">Welcome to TWS Starter</h1>
