@@ -10,6 +10,7 @@ ARG DATABASE_URL
 COPY ./package.json package-lock.json prisma /app/
 WORKDIR /app
 ENV DATABASE_URL=$DATABASE_URL
+RUN echo $DATABASE_URL
 RUN npm ci --omit=dev
 RUN npx prisma migrate deploy
 RUN npx prisma generate
