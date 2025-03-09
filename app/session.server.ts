@@ -1,10 +1,9 @@
 import { createCookieSessionStorage, redirect } from "react-router";
-import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
 
-invariant(import.meta.env.VITE_SESSION_SECRET, "SESSION_SECRET must be set");
+const SESSION_SECRET = import.meta.env.VITE_SESSION_SECRET || "YABA_DABA_DOOO";
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -12,7 +11,7 @@ export const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     path: "/",
     sameSite: "lax",
-    secrets: [import.meta.env.VITE_SESSION_SECRET],
+    secrets: [SESSION_SECRET],
     secure: import.meta.env.PROD,
   },
 });
