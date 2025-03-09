@@ -11,6 +11,9 @@ COPY ./package.json package-lock.json prisma /app/
 WORKDIR /app
 ENV DATABASE_URL=$DATABASE_URL
 RUN echo $DATABASE_URL
+RUN apk add --no-cache postgresql-client
+RUN if [ -z "$DATABASE_URL" ]; then echo "DATABASE_URL is not set"; exit 1; fi
+RUN pg_isready -d $DATABASE_URL
 RUN npm ci --omit=dev
 RUN npx prisma migrate deploy
 RUN npx prisma generate
