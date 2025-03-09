@@ -1,7 +1,22 @@
-export async function loader() {}
+import { requireUserId } from "~/session.server";
+import type { Route } from "./+types/dashboard";
 
-export async function action() {}
+export function meta() {
+  return [{ title: "Dashboard" }];
+}
 
-export default function DashboardRoute() {
-  return <>{"Dashboard"}</>;
+export async function loader({ request }: Route.LoaderArgs) {
+  const userId = await requireUserId(request);
+
+  return {
+    userId,
+  };
+}
+
+export default function DashboardRoute({ loaderData }: Route.ComponentProps) {
+  return (
+    <>
+      {"Dashboard"} || {loaderData.userId}
+    </>
+  );
 }
