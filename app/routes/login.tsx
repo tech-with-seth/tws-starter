@@ -1,23 +1,45 @@
-import { Form, redirect } from "react-router";
+import { data, Form, redirect } from "react-router";
 
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { createUserSession } from "~/session.server";
 import { InputFormField } from "~/components/InputFormField";
+import { safeRedirect } from "~/utils/common";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { verifyLogin } from "~/models/user.server";
 import type { Route } from "./+types/login";
+
+export function meta() {
+  return [{ title: "Login" }];
+}
 
 export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData();
   const intent = form.get("intent");
 
   if (intent === "login") {
-    const email = form.get("email");
-    const password = form.get("password");
+    const email = String(form.get("email"));
+    const password = String(form.get("password"));
+    const redirectTo = safeRedirect(String(form.get("redirectTo")), "/");
+    const remember = String(form.get("remember"));
 
-    console.log(
-      "===== LOG =====",
-      JSON.stringify({ email, password }, null, 4),
-    );
+    // Add CONFORM validation here
+
+    const user = await verifyLogin(email, password);
+
+    if (!user) {
+      return data(
+        { errors: { email: "Invalid email or password", password: null } },
+        { status: 400 },
+      );
+    }
+
+    return createUserSession({
+      redirectTo,
+      remember: remember === "on" ? true : false,
+      request,
+      userId: user.id,
+    });
   }
 
   if (intent === "signUp") {

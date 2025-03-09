@@ -1,4 +1,5 @@
 import {
+  data,
   isRouteErrorResponse,
   Links,
   Meta,
@@ -6,24 +7,19 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
-import type { Route } from "./+types/root";
-import "./app.css";
-import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
-export const links: Route.LinksFunction = () => [
-  //   { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  //   {
-  //     rel: "preconnect",
-  //     href: "https://fonts.gstatic.com",
-  //     crossOrigin: "anonymous",
-  //   },
-  //   {
-  //     rel: "stylesheet",
-  //     href: "https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap",
-  //   },
-];
+import type { Route } from "./+types/root";
+import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
+import { getUser } from "./session.server";
+
+import "./app.css";
+
+// export const links: Route.LinksFunction = () => [];
+
+export async function loader({ request }: Route.LoaderArgs) {
+  return data({ user: await getUser(request) });
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
