@@ -1,9 +1,12 @@
+ARG DATABASE_URL
+
 FROM node:20-alpine AS development-dependencies-env
 COPY . /app
 WORKDIR /app
 RUN npm ci
 
 FROM node:20-alpine AS production-dependencies-env
+ARG DATABASE_URL
 COPY ./package.json package-lock.json prisma /app/
 WORKDIR /app
 ENV DATABASE_URL=$DATABASE_URL
