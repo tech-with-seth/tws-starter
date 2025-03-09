@@ -8,9 +8,11 @@ import {
 export default [
   layout(`routes/wrapper.tsx`, [
     index(`routes/home.tsx`),
-    route(`/dashboard`, `routes/dashboard.tsx`),
-    route(`/profile`, `routes/profile.tsx`),
     route(`/login`, `routes/login.tsx`),
     route(`/logout`, `routes/logout.tsx`),
+    layout(`routes/authenticated.tsx`, [
+      route(`/dashboard`, `routes/dashboard.tsx`),
+      route(`/profile`, `routes/profile.tsx`),
+    ]),
   ]),
 ] satisfies RouteConfig;
