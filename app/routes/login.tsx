@@ -1,12 +1,17 @@
-import { data, Form, redirect } from "react-router";
+import { Form } from "react-router";
+import { parseWithZod, getZodConstraint } from "@conform-to/zod";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { AlertCircle } from "lucide-react";
 
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 import { InputFormField } from "~/components/InputFormField";
+import { loginSchema, signUpSchema } from "~/utils/validation";
 import { safeRedirect } from "~/utils/common";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { verifyLogin } from "~/models/user.server";
 import type { Route } from "./+types/login";
 
 export function meta() {
@@ -16,22 +21,25 @@ export function meta() {
 export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData();
   const intent = form.get("intent");
+  const redirectTo = safeRedirect(String(form.get("redirectTo")), "/");
 
   if (intent === "login") {
-    const email = String(form.get("email"));
-    const password = String(form.get("password"));
-    const redirectTo = safeRedirect(String(form.get("redirectTo")), "/");
     const remember = String(form.get("remember"));
+    const submission = parseWithZod(form, { schema: loginSchema });
 
-    // Add CONFORM validation here
+    if (submission.status !== "success") {
+      return submission.reply();
+    }
 
-    const user = await verifyLogin(email, password);
+    const user = await verifyLogin(
+      submission.value.email,
+      submission.value.password,
+    );
 
     if (!user) {
-      return data(
-        { errors: { email: "Invalid email or password", password: null } },
-        { status: 400 },
-      );
+      return submission.reply({
+        formErrors: ["Invalid email or password"],
+      });
     }
 
     return createUserSession({
@@ -49,19 +57,55 @@ export async function action({ request }: Route.ActionArgs) {
     const lastName = String(form.get("lastName"));
 
     if (email && password && firstName && lastName) {
-      console.log(
-        "===== LOG =====",
-        JSON.stringify({ email, password }, null, 4),
-      );
+      const submission = parseWithZod(form, { schema: signUpSchema });
 
-      return redirect("/dashboard");
+      if (submission.status !== "success") {
+        return submission.reply();
+      }
+
+      const existingUser = await getUserByEmail(email);
+
+      if (existingUser) {
+        return submission.reply({
+          formErrors: ["Email already in use"],
+        });
+      }
+
+      const user = await createUser(email, password);
+
+      return createUserSession({
+        redirectTo,
+        remember: false,
+        request,
+        userId: user.id,
+      });
     }
   }
 
   return null;
 }
 
-export default function LoginRoute() {
+export default function LoginRoute({ actionData }: Route.ComponentProps) {
+  const [loginForm, loginFields] = useForm({
+    lastResult: actionData,
+    constraint: getZodConstraint(loginSchema),
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: loginSchema });
+    },
+  });
+
+  const [signUpForm, signUpFields] = useForm({
+    lastResult: actionData,
+    constraint: getZodConstraint(signUpSchema),
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: signUpSchema });
+    },
+  });
+
   return (
     <div className="flex h-full flex-col items-center justify-start gap-2 pt-12">
       <div className="min-w-[500px]">
@@ -73,20 +117,27 @@ export default function LoginRoute() {
           </TabsList>
           <Card className="w-full p-4">
             <TabsContent value="login">
-              <Form method="POST" className="space-y-4">
+              <Form
+                method="POST"
+                className="space-y-4"
+                {...getFormProps(loginForm)}
+              >
+                {loginForm.errors && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{loginForm.errors}</AlertDescription>
+                  </Alert>
+                )}
                 <InputFormField
-                  errorText="ASDF"
-                  id="email"
+                  errorText={loginFields.email.errors}
                   label="Email"
-                  name="email"
-                  type="email"
+                  {...getInputProps(loginFields.email, { type: "email" })}
                 />
                 <InputFormField
-                  errorText="ASDF"
-                  id="password"
+                  errorText={loginFields.password.errors?.at(0)}
                   label="Password"
-                  name="password"
-                  type="password"
+                  {...getInputProps(loginFields.password, { type: "password" })}
                 />
                 <Button name="intent" value="login">
                   Login
@@ -94,34 +145,32 @@ export default function LoginRoute() {
               </Form>
             </TabsContent>
             <TabsContent value="join">
-              <Form method="POST" className="space-y-4">
+              <Form
+                method="POST"
+                className="space-y-4"
+                {...getFormProps(signUpForm)}
+              >
                 <InputFormField
-                  errorText="ASDF"
-                  id="firstName"
+                  errorText={signUpFields.firstName.errors}
                   label="First name"
-                  name="firstName"
-                  type="text"
+                  {...getInputProps(signUpFields.firstName, { type: "text" })}
                 />
                 <InputFormField
-                  errorText="ASDF"
-                  id="lastName"
+                  errorText={signUpFields.lastName.errors}
                   label="Last name"
-                  name="lastName"
-                  type="text"
+                  {...getInputProps(signUpFields.lastName, { type: "text" })}
                 />
                 <InputFormField
-                  errorText="ASDF"
-                  id="email"
+                  errorText={signUpFields.email.errors}
                   label="Email"
-                  name="email"
-                  type="email"
+                  {...getInputProps(signUpFields.email, { type: "email" })}
                 />
                 <InputFormField
-                  errorText="ASDF"
-                  id="password"
+                  errorText={signUpFields.password.errors?.at(0)}
                   label="Password"
-                  name="password"
-                  type="password"
+                  {...getInputProps(signUpFields.password, {
+                    type: "password",
+                  })}
                 />
                 <Button name="intent" value="signUp">
                   Sign up

@@ -29,11 +29,18 @@ export default function WrapperRoute() {
             </ul>
             <ul className="flex items-center gap-4">
               {user ? (
-                <li>
-                  <Form method="POST" action="/logout">
-                    <Button variant="link">Logout</Button>
-                  </Form>
-                </li>
+                <>
+                  <li>
+                    <Button asChild variant="link">
+                      <Link to="/profile">Profile</Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Form method="POST" action="/logout">
+                      <Button variant="link">Logout</Button>
+                    </Form>
+                  </li>
+                </>
               ) : (
                 <li>
                   <Button asChild variant="link">

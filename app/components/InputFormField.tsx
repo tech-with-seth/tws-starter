@@ -7,7 +7,7 @@ interface InputFormFieldProps {
   label: string;
   name: string;
   type: string;
-  errorText?: string;
+  errorText?: string | string[];
 }
 
 function InputError({ children }: PropsWithChildren) {
