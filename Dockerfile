@@ -1,4 +1,5 @@
 ARG DATABASE_URL
+ARG SESSION_SECRET
 
 FROM node:20-alpine AS development-dependencies-env
 COPY . /app
@@ -7,9 +8,11 @@ RUN npm ci
 
 FROM node:20-alpine AS production-dependencies-env
 ARG DATABASE_URL
+ARG SESSION_SECRET
 COPY ./package.json package-lock.json prisma /app/
 WORKDIR /app
 ENV DATABASE_URL=$DATABASE_URL
+ENV SESSION_SECRET=$SESSION_SECRET
 RUN npm ci --omit=dev
 RUN npx prisma migrate deploy
 RUN npx prisma generate
