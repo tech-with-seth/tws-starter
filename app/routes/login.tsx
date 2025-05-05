@@ -1,18 +1,27 @@
-import { Form } from "react-router";
-import { parseWithZod, getZodConstraint } from "@conform-to/zod";
-import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { data, useFetcher } from "react-router";
 import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
-import { InputFormField } from "~/components/InputFormField";
 import { loginSchema, signUpSchema } from "~/utils/validation";
 import { safeRedirect } from "~/utils/common";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import type { Route } from "./+types/login";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 export function meta() {
   return [{ title: "Login" }];
@@ -20,26 +29,23 @@ export function meta() {
 
 export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData();
-  const intent = form.get("intent");
+  const intent = String(form.get("intent"));
   const redirectTo = safeRedirect(String(form.get("redirectTo")), "/");
 
   if (intent === "login") {
+    const email = String(form.get("email"));
+    const password = String(form.get("password"));
     const remember = String(form.get("remember"));
-    const submission = parseWithZod(form, { schema: loginSchema });
 
-    if (submission.status !== "success") {
-      return submission.reply();
-    }
-
-    const user = await verifyLogin(
-      submission.value.email,
-      submission.value.password,
-    );
+    const user = await verifyLogin(email, password);
 
     if (!user) {
-      return submission.reply({
-        formErrors: ["Invalid email or password"],
-      });
+      return data(
+        {
+          loginError: "Invalid email or password",
+        },
+        { status: 401 },
+      );
     }
 
     return createUserSession({
@@ -57,18 +63,15 @@ export async function action({ request }: Route.ActionArgs) {
     const lastName = String(form.get("lastName"));
 
     if (email && password && firstName && lastName) {
-      const submission = parseWithZod(form, { schema: signUpSchema });
-
-      if (submission.status !== "success") {
-        return submission.reply();
-      }
-
       const existingUser = await getUserByEmail(email);
 
       if (existingUser) {
-        return submission.reply({
-          formErrors: ["Email already in use"],
-        });
+        return data(
+          {
+            signUpError: "Email already exists",
+          },
+          { status: 400 },
+        );
       }
 
       const user = await createUser(email, password);
@@ -85,26 +88,48 @@ export async function action({ request }: Route.ActionArgs) {
   return null;
 }
 
-export default function LoginRoute({ actionData }: Route.ComponentProps) {
-  const [loginForm, loginFields] = useForm({
-    lastResult: actionData,
-    constraint: getZodConstraint(loginSchema),
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: loginSchema });
+export default function LoginRoute() {
+  const loginFetcher = useFetcher();
+
+  const loginForm = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
     },
   });
 
-  const [signUpForm, signUpFields] = useForm({
-    lastResult: actionData,
-    constraint: getZodConstraint(signUpSchema),
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: signUpSchema });
+  function onLoginSubmit(values: z.infer<typeof loginSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    loginFetcher.submit(
+      { ...values, intent: "login" },
+      {
+        method: "POST",
+      },
+    );
+  }
+
+  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
     },
   });
+
+  function onSignUpSubmit(values: z.infer<typeof signUpSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    loginFetcher.submit(
+      { ...values, intent: "signUp" },
+      {
+        method: "POST",
+      },
+    );
+  }
 
   return (
     <div className="flex h-full flex-col items-center justify-start gap-2 pt-12">
@@ -117,64 +142,127 @@ export default function LoginRoute({ actionData }: Route.ComponentProps) {
           </TabsList>
           <Card className="w-full p-4">
             <TabsContent value="login">
-              <Form
-                method="POST"
-                className="space-y-4"
-                {...getFormProps(loginForm)}
-              >
-                {loginForm.errors && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{loginForm.errors}</AlertDescription>
-                  </Alert>
-                )}
-                <InputFormField
-                  errorText={loginFields.email.errors}
-                  label="Email"
-                  {...getInputProps(loginFields.email, { type: "email" })}
-                />
-                <InputFormField
-                  errorText={loginFields.password.errors?.at(0)}
-                  label="Password"
-                  {...getInputProps(loginFields.password, { type: "password" })}
-                />
-                <Button name="intent" value="login">
-                  Login
-                </Button>
+              {loginFetcher.data?.loginError && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>
+                    {loginFetcher.data.loginError}
+                  </AlertDescription>
+                </Alert>
+              )}
+              <Form {...loginForm}>
+                <form
+                  onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+                  className="space-y-8"
+                >
+                  <FormField
+                    control={loginForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="user@mail.com"
+                            type="email"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={loginForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">Submit</Button>
+                </form>
               </Form>
             </TabsContent>
             <TabsContent value="join">
-              <Form
-                method="POST"
-                className="space-y-4"
-                {...getFormProps(signUpForm)}
-              >
-                <InputFormField
-                  errorText={signUpFields.firstName.errors}
-                  label="First name"
-                  {...getInputProps(signUpFields.firstName, { type: "text" })}
-                />
-                <InputFormField
-                  errorText={signUpFields.lastName.errors}
-                  label="Last name"
-                  {...getInputProps(signUpFields.lastName, { type: "text" })}
-                />
-                <InputFormField
-                  errorText={signUpFields.email.errors}
-                  label="Email"
-                  {...getInputProps(signUpFields.email, { type: "email" })}
-                />
-                <InputFormField
-                  errorText={signUpFields.password.errors?.at(0)}
-                  label="Password"
-                  {...getInputProps(signUpFields.password, {
-                    type: "password",
-                  })}
-                />
-                <Button name="intent" value="signUp">
-                  Sign up
-                </Button>
+              {loginFetcher.data?.signUpError && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>
+                    {loginFetcher.data.signUpError}
+                  </AlertDescription>
+                </Alert>
+              )}
+              <Form {...signUpForm}>
+                <form
+                  onSubmit={signUpForm.handleSubmit(onSignUpSubmit)}
+                  className="space-y-8"
+                >
+                  <FormField
+                    control={signUpForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="user@mail.com"
+                            type="email"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={signUpForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={signUpForm.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Steve" type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={signUpForm.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Madden" type="text" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">Submit</Button>
+                </form>
               </Form>
             </TabsContent>
           </Card>
