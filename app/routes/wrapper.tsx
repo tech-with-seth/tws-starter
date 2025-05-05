@@ -1,12 +1,14 @@
+import { Outlet } from "react-router";
 import { AppSidebar } from "~/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb";
+import { Container } from "~/components/Container";
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   BreadcrumbLink,
+//   BreadcrumbList,
+//   BreadcrumbPage,
+//   BreadcrumbSeparator,
+// } from "~/components/ui/breadcrumb";
 import { Separator } from "~/components/ui/separator";
 import {
   SidebarProvider,
@@ -26,12 +28,12 @@ export default function WrapperRoute() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar />
+      <AppSidebar user={user} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
-          <Breadcrumb>
+          {/* <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink href="#">
@@ -43,57 +45,14 @@ export default function WrapperRoute() {
                 <BreadcrumbPage>Data Fetching</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
-          </Breadcrumb>
+          </Breadcrumb> */}
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-          </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-        </div>
-        {/* <div className="grid h-screen w-full grid-cols-12 grid-rows-[auto_1fr_auto]">
-          <header className="col-span-full border-b">
-            <Container as="nav" className="flex justify-between p-4">
-              <ul className="flex items-center gap-4">
-                <li>
-                  <SidebarTrigger />
-                </li>
-                <li>
-                  <Link className="font-black" to="/">
-                    TWS
-                  </Link>
-                </li>
-              </ul>
-              <ul className="flex items-center gap-4">
-                {user ? (
-                  <>
-                    <li>
-                      <Button asChild variant="link">
-                        <Link to="/profile">Profile</Link>
-                      </Button>
-                    </li>
-                    <li>
-                      <Form method="POST" action="/logout">
-                        <Button variant="link">Logout</Button>
-                      </Form>
-                    </li>
-                  </>
-                ) : (
-                  <li>
-                    <Button asChild variant="link">
-                      <Link to="/login">Login</Link>
-                    </Button>
-                  </li>
-                )}
-              </ul>
-            </Container>
-          </header>
+        <div className="grid h-full w-full grid-cols-12 grid-rows-[auto_1fr]">
+          <header className="col-span-full border-b"></header>
           <main className="col-span-full flex flex-col overflow-y-auto">
-            <Container className="flex-1 p-4">
+            <div className="flex-1 p-4">
               <Outlet />
-            </Container>
+            </div>
             <footer className="col-span-full border-t">
               <Container className="p-4">
                 Built by{" "}
@@ -103,7 +62,7 @@ export default function WrapperRoute() {
               </Container>
             </footer>
           </main>
-        </div> */}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

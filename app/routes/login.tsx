@@ -100,8 +100,6 @@ export default function LoginRoute() {
   });
 
   function onLoginSubmit(values: z.infer<typeof loginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     loginFetcher.submit(
       { ...values, intent: "login" },
       {
@@ -121,8 +119,6 @@ export default function LoginRoute() {
   });
 
   function onSignUpSubmit(values: z.infer<typeof signUpSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     loginFetcher.submit(
       { ...values, intent: "signUp" },
       {
