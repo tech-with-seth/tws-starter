@@ -34,8 +34,10 @@ export default function Home() {
           + <ResourceLink href="https://ui.shadcn.com/">shadcn</ResourceLink>
         </li>
         <li>
-          <ResourceLink href="https://conform.guide/">Conform</ResourceLink> +{" "}
-          <ResourceLink href="https://zod.dev/">Zod</ResourceLink>
+          <ResourceLink href="https://react-hook-form.com/">
+            React Hook Form
+          </ResourceLink>{" "}
+          + <ResourceLink href="https://zod.dev/">Zod</ResourceLink>
         </li>
         <li>
           <ResourceLink href="https://www.prisma.io/docs">Prisma</ResourceLink>
