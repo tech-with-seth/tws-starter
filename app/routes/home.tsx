@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from "react";
-import type { Route } from "./+types/home";
+import { SITE_TITLE } from "~/utils/site-config";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
-    { title: "TWS Starter" },
-    { name: "description", content: "Welcome to TWS Starter!" },
+    { title: SITE_TITLE },
+    { name: "description", content: `Welcome to ${SITE_TITLE}!` },
   ];
 }
 
@@ -19,7 +19,7 @@ function ResourceLink({ children, href }: PropsWithChildren<{ href: string }>) {
 export default function Home() {
   return (
     <>
-      <h1 className="text-4xl font-bold">This is the TWS Starter</h1>
+      <h1 className="text-4xl font-bold">{`This is the ${SITE_TITLE}`}</h1>
       <p className="py-4">Technologies used:</p>
       <ul>
         <li>

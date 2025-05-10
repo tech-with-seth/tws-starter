@@ -12,10 +12,13 @@ import { AlertCircle } from "lucide-react";
 import type { Route } from "./+types/root";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { getUser } from "./session.server";
+import { SITE_TITLE } from "~/utils/site-config";
 
 import "./app.css";
 
-// export const links: Route.LinksFunction = () => [];
+export function meta() {
+  return [{ title: SITE_TITLE }];
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
   return data({ user: await getUser(request) });
