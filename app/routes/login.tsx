@@ -22,9 +22,10 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { SITE_TITLE } from "~/utils/site-config";
 
 export function meta() {
-  return [{ title: "Login" }];
+  return [{ title: `${SITE_TITLE} | Login` }];
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -129,7 +130,7 @@ export default function LoginRoute() {
 
   return (
     <div className="flex h-full flex-col items-center justify-start gap-2 pt-12">
-      <div className="min-w-[500px]">
+      <div className="w-full md:max-w-[500px]">
         <h1 className="mb-4 text-2xl font-bold">Login or sign up</h1>
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="mb-4 w-full">
