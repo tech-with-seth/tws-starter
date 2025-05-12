@@ -27,11 +27,11 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
-    {
-      name: "Starter",
-      logo: GalleryVerticalEnd,
-      // plan: "Enterprise",
-    },
+    // {
+    //   name: "Starter",
+    //   logo: GalleryVerticalEnd,
+    //   plan: "Enterprise",
+    // },
   ],
   navMain: [
     {
@@ -79,9 +79,9 @@ export function AppSidebar({
           <NavGuest />
         )}
       </SidebarContent>
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <NavUser user={data.user} />
-      </SidebarFooter>
+      </SidebarFooter> */}
       <SidebarRail />
     </Sidebar>
   );
