@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { Button } from "~/components/ui/button";
 import { getUsers } from "~/models/user.server";
 
-const resend = new Resend(import.meta.env.VITE_RESEND_API_KEY);
+const resend = new Resend(process.env.VITE_RESEND_API_KEY);
 
 export async function loader() {
   return {
