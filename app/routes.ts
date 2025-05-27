@@ -16,7 +16,10 @@ export default [
     layout(`routes/authenticated.tsx`, [
       route(`dashboard`, `routes/dashboard.tsx`),
       route(`profile`, `routes/profile.tsx`),
-      ...prefix(`admin`, [route(`email`, `routes/admin/email.tsx`)]),
+      ...prefix(`admin`, [
+        route(`email`, `routes/admin/email.tsx`),
+        route(`ai`, `routes/admin/ai.tsx`),
+      ]),
     ]),
     ...prefix(`api`, [route(`auth/*`, `routes/api/auth.ts`)]),
   ]),
