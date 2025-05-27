@@ -1,38 +1,72 @@
-import { Link, NavLink, Outlet } from "react-router";
+import {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  type NavLinkRenderProps,
+} from "react-router";
+
 import { SITE_TITLE } from "~/utils/site-config";
+import { useOptionalUser } from "~/utils/common";
+
+const defaultLinkStyle = `inline-block px-3 py-2 rounded-md dark:hover:bg-zinc-800`;
+
+const navLinkClassName = ({ isActive }: NavLinkRenderProps) =>
+  `${defaultLinkStyle} ${isActive ? "bg-zinc-200 dark:bg-zinc-700" : ""}`;
 
 export default function WrapperRoute() {
+  const user = useOptionalUser();
+
   return (
     <>
       <div className="grid h-full w-full grid-cols-12 grid-rows-[auto_1fr]">
         <header className="col-span-full border-b">
-          <ul className="flex items-center">
-            <li>
-              <Link to="/" className="inline-block p-4 dark:hover:bg-zinc-800">
-                {SITE_TITLE}
-              </Link>
-            </li>
-            <li>
-              <NavLink
-                to="/sign-in"
-                className={({ isActive }) =>
-                  `inline-block p-4 dark:hover:bg-zinc-800 ${isActive ? "bg-zinc-200 dark:bg-zinc-700" : ""}`
-                }
-              >
-                Sign In
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/sign-up"
-                className={({ isActive }) =>
-                  `inline-block p-4 dark:hover:bg-zinc-800 ${isActive ? "bg-zinc-200 dark:bg-zinc-700" : ""}`
-                }
-              >
-                Sign Up
-              </NavLink>
-            </li>
-          </ul>
+          <nav className="flex justify-between">
+            <ul className="flex items-center gap-2 px-2 py-2">
+              <li>
+                <Link to="/" className={defaultLinkStyle}>
+                  {SITE_TITLE}
+                </Link>
+              </li>
+              <li>
+                <NavLink to="/about" className={navLinkClassName}>
+                  About
+                </NavLink>
+              </li>
+              {user && (
+                <li>
+                  <NavLink to="/dashboard" className={navLinkClassName}>
+                    Dashboard
+                  </NavLink>
+                </li>
+              )}
+            </ul>
+            <ul className="flex items-center gap-2 px-2 py-2">
+              {!user && (
+                <>
+                  <li>
+                    <NavLink to="/sign-in" className={navLinkClassName}>
+                      Sign In
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/sign-up" className={navLinkClassName}>
+                      Sign Up
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              {user && (
+                <li>
+                  <Form method="POST" action="/sign-out">
+                    <button className={defaultLinkStyle} type="submit">
+                      <p>Sign Out</p>
+                    </button>
+                  </Form>
+                </li>
+              )}
+            </ul>
+          </nav>
         </header>
         <main className="col-span-full flex flex-col overflow-y-auto">
           <div className="flex-1 p-4">

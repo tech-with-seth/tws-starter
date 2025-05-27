@@ -9,9 +9,10 @@ import {
 export default [
   layout(`routes/wrapper.tsx`, [
     index(`routes/home.tsx`),
+    route(`about`, `routes/about.tsx`),
     route(`sign-in`, `routes/signin.tsx`),
     route(`sign-up`, `routes/signup.tsx`),
-    route(`logout`, `routes/logout.tsx`),
+    route(`sign-out`, `routes/signout.ts`),
     layout(`routes/authenticated.tsx`, [
       route(`dashboard`, `routes/dashboard.tsx`),
       route(`profile`, `routes/profile.tsx`),

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
+export const signInSchema = z.object({
   email: z
     .string({
       required_error: "Email is required",
@@ -13,7 +13,7 @@ export const loginSchema = z.object({
     .min(8),
 });
 
-export const signUpSchema = loginSchema.extend({
+export const signUpSchema = signInSchema.extend({
   firstName: z
     .string({
       required_error: "First name is required",
