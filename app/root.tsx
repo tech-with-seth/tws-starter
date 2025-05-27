@@ -13,9 +13,20 @@ import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { SITE_TITLE } from "~/utils/site-config";
 
 import "./app.css";
+import { auth } from "./utils/auth.server";
 
 export function meta() {
   return [{ title: SITE_TITLE }];
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const response = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  return {
+    user: response?.user || null,
+  };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

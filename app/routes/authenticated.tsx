@@ -4,12 +4,12 @@ import type { Route } from "./+types/authenticated";
 import { auth } from "~/utils/auth.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await auth.api.getSession({
+  const response = await auth.api.getSession({
     headers: request.headers,
   });
 
-  if (!session || !session?.user) {
-    return redirect("/login");
+  if (!response || !response.session || !response.user) {
+    return redirect("/sign-in");
   }
 
   return null;

@@ -1,5 +1,5 @@
 import { useReducer, useState } from "react";
-import { Form, redirect, useNavigate } from "react-router";
+import { Form, redirect, useHref, useNavigate } from "react-router";
 
 import { Card } from "~/components/ui/card";
 import { SITE_TITLE } from "~/utils/site-config";
@@ -15,11 +15,11 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await auth.api.getSession({
+  const response = await auth.api.getSession({
     headers: request.headers,
   });
 
-  if (session && session?.user) {
+  if (response && response.session && response.user) {
     return redirect("/dashboard");
   }
 
@@ -46,10 +46,11 @@ export default function SignInRoute() {
           toggleIsLoading();
         },
         onSuccess: (ctx) => {
-          navigate("/dashboard");
+          navigate(`/dashboard`);
         },
         onError: (ctx) => {
           alert(JSON.stringify(ctx.error, null, 2));
+          toggleIsLoading();
         },
       },
     );

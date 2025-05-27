@@ -1,14 +1,28 @@
 import { useReducer, useState } from "react";
-import { Form, useNavigate } from "react-router";
+import { Form, redirect, useHref, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { signUp } from "~/utils/auth-client";
 import { SITE_TITLE } from "~/utils/site-config";
+import type { Route } from "./+types/signup";
+import { auth } from "~/utils/auth.server";
 
 export function meta() {
   return [{ title: `${SITE_TITLE} | Sign Up` }];
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const response = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  if (response && response.session && response.user) {
+    return redirect("/dashboard");
+  }
+
+  return null;
 }
 
 export default function SignUpRoute() {
@@ -32,10 +46,11 @@ export default function SignUpRoute() {
           toggleIsLoading();
         },
         onSuccess: (ctx) => {
-          navigate("/dashboard");
+          navigate(`/sign-in`);
         },
         onError: (ctx) => {
           alert(JSON.stringify(ctx.error, null, 2));
+          toggleIsLoading();
         },
       },
     );
