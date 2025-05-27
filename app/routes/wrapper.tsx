@@ -34,11 +34,18 @@ export default function WrapperRoute() {
                 </NavLink>
               </li>
               {user && (
-                <li>
-                  <NavLink to="/dashboard" className={navLinkClassName}>
-                    Dashboard
-                  </NavLink>
-                </li>
+                <>
+                  <li>
+                    <NavLink to="/dashboard" className={navLinkClassName}>
+                      Dashboard
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/profile" className={navLinkClassName}>
+                      Profile
+                    </NavLink>
+                  </li>
+                </>
               )}
             </ul>
             <ul className="flex items-center gap-2 px-2 py-2">
