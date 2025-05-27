@@ -1,10 +1,16 @@
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
 
-import { requireUserId } from "~/session.server";
 import type { Route } from "./+types/authenticated";
+import { auth } from "~/utils/auth.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  await requireUserId(request);
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  if (!session || !session?.user) {
+    return redirect("/login");
+  }
 
   return null;
 }

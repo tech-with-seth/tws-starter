@@ -28,16 +28,21 @@ export default function Home() {
           </ResourceLink>
         </li>
         <li>
-          <ResourceLink href="https://tailwindcss.com/">
-            Tailwind v4
-          </ResourceLink>{" "}
-          + <ResourceLink href="https://ui.shadcn.com/">shadcn</ResourceLink>
+          <ResourceLink href="https://www.better-auth.com/">
+            Better Auth
+          </ResourceLink>
         </li>
         <li>
           <ResourceLink href="https://react-hook-form.com/">
             React Hook Form
           </ResourceLink>{" "}
           + <ResourceLink href="https://zod.dev/">Zod</ResourceLink>
+        </li>
+        <li>
+          <ResourceLink href="https://tailwindcss.com/">
+            Tailwind v4
+          </ResourceLink>{" "}
+          + <ResourceLink href="https://ui.shadcn.com/">shadcn</ResourceLink>
         </li>
         <li>
           <ResourceLink href="https://www.prisma.io/docs">Prisma</ResourceLink>

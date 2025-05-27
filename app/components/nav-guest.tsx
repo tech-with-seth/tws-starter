@@ -19,9 +19,9 @@ export function NavGuest() {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70" asChild>
-            <NavLink to="/login">
+            <NavLink to="/sign-in">
               <LogInIcon className="text-sidebar-foreground/70" />
-              <span>Login</span>
+              <span>Sign In</span>
             </NavLink>
           </SidebarMenuButton>
         </SidebarMenuItem>

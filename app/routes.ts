@@ -9,12 +9,14 @@ import {
 export default [
   layout(`routes/wrapper.tsx`, [
     index(`routes/home.tsx`),
-    route(`/login`, `routes/login.tsx`),
-    route(`/logout`, `routes/logout.tsx`),
+    route(`sign-in`, `routes/signin.tsx`),
+    route(`sign-up`, `routes/signup.tsx`),
+    route(`logout`, `routes/logout.tsx`),
     layout(`routes/authenticated.tsx`, [
-      route(`/dashboard`, `routes/dashboard.tsx`),
-      route(`/profile`, `routes/profile.tsx`),
-      ...prefix(`/admin`, [route(`/email`, `routes/admin/email.tsx`)]),
+      route(`dashboard`, `routes/dashboard.tsx`),
+      route(`profile`, `routes/profile.tsx`),
+      ...prefix(`admin`, [route(`email`, `routes/admin/email.tsx`)]),
     ]),
+    ...prefix(`api`, [route(`auth/*`, `routes/api/auth.ts`)]),
   ]),
 ] satisfies RouteConfig;
