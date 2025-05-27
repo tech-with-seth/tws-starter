@@ -1,69 +1,51 @@
-import { Outlet } from "react-router";
-import { AppSidebar } from "~/components/app-sidebar";
-import { Container } from "~/components/Container";
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   BreadcrumbList,
-//   BreadcrumbPage,
-//   BreadcrumbSeparator,
-// } from "~/components/ui/breadcrumb";
-import { Separator } from "~/components/ui/separator";
-import {
-  SidebarProvider,
-  SidebarTrigger,
-  SidebarInset,
-} from "~/components/ui/sidebar";
-import { useOptionalUser } from "~/utils/common";
+import { Link, NavLink, Outlet } from "react-router";
+import { SITE_TITLE } from "~/utils/site-config";
 
 export default function WrapperRoute() {
-  const user = useOptionalUser();
-
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "19rem",
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar user={user} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          {/* <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb> */}
+    <>
+      <div className="grid h-full w-full grid-cols-12 grid-rows-[auto_1fr]">
+        <header className="col-span-full border-b">
+          <ul className="flex items-center">
+            <li>
+              <Link to="/" className="inline-block p-4 dark:hover:bg-zinc-800">
+                {SITE_TITLE}
+              </Link>
+            </li>
+            <li>
+              <NavLink
+                to="/sign-in"
+                className={({ isActive }) =>
+                  `inline-block p-4 dark:hover:bg-zinc-800 ${isActive ? "bg-zinc-200 dark:bg-zinc-700" : ""}`
+                }
+              >
+                Sign In
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/sign-up"
+                className={({ isActive }) =>
+                  `inline-block p-4 dark:hover:bg-zinc-800 ${isActive ? "bg-zinc-200 dark:bg-zinc-700" : ""}`
+                }
+              >
+                Sign Up
+              </NavLink>
+            </li>
+          </ul>
         </header>
-        <div className="grid h-full w-full grid-cols-12 grid-rows-[auto_1fr]">
-          <header className="col-span-full border-b"></header>
-          <main className="col-span-full flex flex-col overflow-y-auto">
-            <div className="flex-1 p-4">
-              <Outlet />
-            </div>
-            <footer className="col-span-full border-t">
-              <Container className="p-4">
-                Built by{" "}
-                <a href="https://bsky.app/profile/sethdavis.tech">
-                  @sethdavis.tech
-                </a>
-              </Container>
-            </footer>
-          </main>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        <main className="col-span-full flex flex-col overflow-y-auto">
+          <div className="flex-1 p-4">
+            <Outlet />
+          </div>
+          <footer className="col-span-full border-t p-4">
+            Built by{" "}
+            <a href="https://bsky.app/profile/sethdavis.tech">
+              @sethdavis.tech
+            </a>
+          </footer>
+        </main>
+      </div>
+    </>
   );
 }
