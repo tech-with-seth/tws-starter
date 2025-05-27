@@ -29,8 +29,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function SignInRoute() {
-  const [email, setEmail] = useState("jeff@mail.com");
-  const [password, setPassword] = useState("asdfasdf");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
   const [isLoading, toggleIsLoading] = useReducer((s) => !s, false);

@@ -1,5 +1,5 @@
 import { useReducer, useState } from "react";
-import { Form, redirect, useHref, useNavigate } from "react-router";
+import { Form, redirect, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -28,9 +28,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function SignUpRoute() {
-  const [email, setEmail] = useState("jeff@mail.com");
-  const [name, setName] = useState("Jeff");
-  const [password, setPassword] = useState("asdfasdf");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
   const [isLoading, toggleIsLoading] = useReducer((s) => !s, false);
