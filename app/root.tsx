@@ -69,10 +69,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <main className="container mx-auto p-4 pt-16">
-      <Alert variant="destructive">
+      <Alert className="mb-4 border-red-500 text-red-500">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
+        <AlertDescription className="text-red-500">
           <p>{message}</p>
           <p>{details}</p>
         </AlertDescription>

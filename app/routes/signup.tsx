@@ -8,6 +8,8 @@ import { signUp } from "~/utils/auth-client";
 import { SITE_TITLE } from "~/utils/site-config";
 import type { Route } from "./+types/signup";
 import { auth } from "~/utils/auth.server";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export function meta() {
   return [{ title: `${SITE_TITLE} | Sign Up` }];
@@ -30,6 +32,7 @@ export default function SignUpRoute() {
   const [name, setName] = useState("Jeff");
   const [password, setPassword] = useState("asdfasdf");
 
+  const [formError, setFormError] = useState<string | null>(null);
   const [isLoading, toggleIsLoading] = useReducer((s) => !s, false);
 
   const navigate = useNavigate();
@@ -49,8 +52,8 @@ export default function SignUpRoute() {
           navigate(`/sign-in`);
         },
         onError: (ctx) => {
-          alert(JSON.stringify(ctx.error, null, 2));
           toggleIsLoading();
+          setFormError(ctx.error.message || "An error occurred");
         },
       },
     );
@@ -61,6 +64,15 @@ export default function SignUpRoute() {
       <div className="w-full md:max-w-[500px]">
         <h1 className="mb-4 text-2xl font-bold">Sign up</h1>
         <Card className="w-full p-4">
+          {formError && (
+            <Alert className="mb-4 border-red-500 text-red-500">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription className="text-red-500">
+                {formError}
+              </AlertDescription>
+            </Alert>
+          )}
           <Form onSubmit={handleSignUp} className="space-y-4">
             <div className="space-y-2">
               <Label className="font-bold">Name</Label>
