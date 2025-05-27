@@ -29,10 +29,10 @@ export default function SignUpRoute() {
       },
       {
         onRequest: (ctx) => {
-          // show loading state
+          toggleIsLoading();
         },
         onSuccess: (ctx) => {
-          // redirect to home
+          navigate("/dashboard");
         },
         onError: (ctx) => {
           alert(JSON.stringify(ctx.error, null, 2));
