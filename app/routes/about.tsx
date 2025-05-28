@@ -27,6 +27,12 @@ export default function AboutRoute() {
           </ResourceLink>
         </li>
         <li>
+          <ResourceLink href="https://polar.sh/">Polar</ResourceLink>
+        </li>
+        <li>
+          <ResourceLink href="https://resend.com/">Resend</ResourceLink>
+        </li>
+        <li>
           <ResourceLink href="https://react-hook-form.com/">
             React Hook Form
           </ResourceLink>{" "}
@@ -42,7 +48,7 @@ export default function AboutRoute() {
           <ResourceLink href="https://www.prisma.io/docs">Prisma</ResourceLink>
         </li>
         <li>
-          <ResourceLink href="https://reactrouter.com/">Railway</ResourceLink>
+          <ResourceLink href="https://railway.com/">Railway</ResourceLink>
         </li>
       </ul>
     </>

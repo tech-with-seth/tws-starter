@@ -1,8 +1,19 @@
-# Welcome to React Router!
+# Welcome to TWS Starter
 
 A modern, production-ready template for building full-stack React applications using React Router.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+Stack leverages:
+
+- [React Router 7](https://reactrouter.com/)
+- [Better Auth](https://www.better-auth.com/)
+- [Polar](https://polar.sh/)
+- [Resend](https://resend.com/)
+- [React Hook Form](https://react-hook-form.com/)
+- [Zod](https://zod.dev/)
+- [Tailwind v4](https://tailwindcss.com/)
+- [shadcn](https://ui.shadcn.com/)
+- [Prisma](https://www.prisma.io/docs)
+- [Railway](https://railway.com/)
 
 ## Features
 
