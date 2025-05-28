@@ -45,6 +45,19 @@ export default function WrapperRoute() {
                       Profile
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink to="/portal" className={navLinkClassName}>
+                      Portal
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to={`/checkout?products=c2a7d57a-b0c4-4216-afe3-ed477524fff8&products=045ca2e4-8c5c-4c54-9cf8-86d46cf4fc40`}
+                      className={navLinkClassName}
+                    >
+                      Checkout
+                    </NavLink>
+                  </li>
                 </>
               )}
             </ul>
