@@ -11,9 +11,9 @@ import { AlertCircle } from "lucide-react";
 import type { Route } from "./+types/root";
 import { Alert, AlertDescription, AlertTitle } from "./components/ui/alert";
 import { SITE_TITLE } from "~/utils/site-config";
+import { auth } from "./utils/auth.server";
 
 import "./app.css";
-import { auth } from "./utils/auth.server";
 
 export function meta() {
   return [{ title: SITE_TITLE }];
