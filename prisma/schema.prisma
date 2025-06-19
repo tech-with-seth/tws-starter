@@ -8,15 +8,17 @@ datasource db {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String         @id @default(cuid())
     name          String
     email         String
     emailVerified Boolean
     image         String?
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
     sessions      Session[]
     accounts      Account[]
+    threads       Thread[]
+    rateLimitLogs RateLimitLog[]
 
     @@unique([email])
     @@map("user")
@@ -65,4 +67,51 @@ model Verification {
     updatedAt  DateTime? @updatedAt
 
     @@map("verification")
+}
+
+model Thread {
+    id        String    @id @default(cuid())
+    title     String?
+    userId    String
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    messages  Message[]
+    archived  Boolean   @default(false)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+}
+
+model Message {
+    id                String    @id @default(cuid())
+    threadId          String
+    thread            Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+    parentMessageId   String?
+    parentMessage     Message?  @relation("ParentMessage", fields: [parentMessageId], references: [id])
+    childMessages     Message[] @relation("ParentMessage")
+    role              String // 'user', 'assistant', 'system'
+    content           String
+    responseData      Json?
+    promptTokens      Int?
+    completionTokens  Int?
+    totalTokens       Int?
+    version           Int       @default(1)
+    previousMessageId String?
+    error             Boolean   @default(false)
+    errorDetails      String?
+    completedAt       DateTime?
+    archived          Boolean   @default(false)
+    createdAt         DateTime  @default(now())
+    updatedAt         DateTime  @updatedAt
+
+    @@index([threadId])
+    @@index([parentMessageId])
+    @@index([createdAt])
+}
+
+model RateLimitLog {
+    id       String   @id @default(cuid())
+    userId   String
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    usedAt   DateTime @default(now())
+    endpoint String
+    tokens   Int
 }
