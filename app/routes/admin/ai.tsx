@@ -5,7 +5,6 @@ import invariant from "tiny-invariant";
 import type { Route } from "./+types/ai";
 import { Form, useNavigation } from "react-router";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 

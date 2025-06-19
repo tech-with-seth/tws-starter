@@ -45,7 +45,7 @@ export default function WrapperRoute() {
                       Profile
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <NavLink to="/portal" className={navLinkClassName}>
                       Portal
                     </NavLink>
@@ -57,7 +57,7 @@ export default function WrapperRoute() {
                     >
                       Checkout
                     </NavLink>
-                  </li>
+                  </li> */}
                 </>
               )}
             </ul>

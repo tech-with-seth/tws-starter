@@ -11,6 +11,7 @@ import type { Route } from "./+types/signin";
 import { auth } from "~/utils/auth.server";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { prisma } from "~/db.server";
 
 export function meta() {
   return [{ title: `${SITE_TITLE} | Sign In` }];
@@ -22,6 +23,14 @@ export async function loader({ request }: Route.LoaderArgs) {
   });
 
   if (response && response.session && response.user) {
+    await prisma.session.create({
+      data: {
+        token: response.session.token,
+        userId: response.user.id,
+        expiresAt: response.session.expiresAt,
+      },
+    });
+
     return redirect("/dashboard");
   }
 

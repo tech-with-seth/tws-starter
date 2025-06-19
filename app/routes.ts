@@ -22,8 +22,8 @@ export default [
       route(`dashboard`, `routes/dashboard.tsx`),
       route(`profile`, `routes/profile.tsx`),
       // Polar routes
-      route(`checkout`, `routes/polar/checkout.ts`),
-      route(`portal`, `routes/polar/portal.ts`),
+      // route(`checkout`, `routes/polar/checkout.ts`),
+      // route(`portal`, `routes/polar/portal.ts`),
       // Admin routes
       ...prefix(`admin`, [
         route(`ai`, `routes/admin/ai.tsx`),
